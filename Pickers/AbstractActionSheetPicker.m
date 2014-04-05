@@ -234,7 +234,11 @@
 
 - (UIBarButtonItem *)createToolbarLabelWithTitle:(NSString *)aTitle {
     UILabel *toolBarItemlabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 180,30)];
-    [toolBarItemlabel setTextAlignment:UITextAlignmentCenter];    
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_6_0
+    [toolBarItemlabel setTextAlignment:NSTextAlignmentCenter];
+#else
+    [toolBarItemlabel setTextAlignment:UITextAlignmentCenter];
+#endif
     [toolBarItemlabel setTextColor:[UIColor whiteColor]];    
     [toolBarItemlabel setFont:[UIFont boldSystemFontOfSize:16]];    
     [toolBarItemlabel setBackgroundColor:[UIColor clearColor]];    
@@ -319,7 +323,11 @@
 - (void)configureAndPresentPopoverForView:(UIView *)aView {
     UIViewController *viewController = [[UIViewController alloc] initWithNibName:nil bundle:nil];
     viewController.view = aView;
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_7_0
+    viewController.preferredContentSize = viewController.view.frame.size;
+#else
     viewController.contentSizeForViewInPopover = viewController.view.frame.size;
+#endif
     _popOverController = [[UIPopoverController alloc] initWithContentViewController:viewController];
     if (self.popoverBackgroundViewClass)
     {

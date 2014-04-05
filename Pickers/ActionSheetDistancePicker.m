@@ -125,7 +125,7 @@
     if ([target respondsToSelector:action])
         objc_msgSend(target, action, [NSNumber numberWithInt:bigUnits], [NSNumber numberWithInt:smallUnits], origin);
     else
-        NSAssert(NO, @"Invalid target/action ( %s / %s ) combination used for ActionSheetPicker", object_getClassName(target), (char *)action);
+        NSAssert(NO, @"Invalid target/action ( %s / %s ) combination used for ActionSheetPicker", object_getClassName(target), sel_getName(action));
 }
 
 #pragma mark -
@@ -152,8 +152,13 @@
 
 - (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component {
     CGFloat totalWidth = pickerView.frame.size.width - 30;
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_7_0
+    CGFloat bigUnitLabelSize = [self.bigUnitString sizeWithAttributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:20]}].width;
+    CGFloat smallUnitLabelSize = [self.smallUnitString sizeWithAttributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:20]}].width;
+#else
     CGFloat bigUnitLabelSize = [self.bigUnitString sizeWithFont:[UIFont boldSystemFontOfSize:20]].width;
     CGFloat smallUnitLabelSize = [self.smallUnitString sizeWithFont:[UIFont boldSystemFontOfSize:20]].width;
+#endif
     CGFloat otherSize = (totalWidth - bigUnitLabelSize - smallUnitLabelSize)/(self.bigUnitDigits + self.smallUnitDigits);
     if (component == self.bigUnitDigits - 1)
         return otherSize + bigUnitLabelSize;

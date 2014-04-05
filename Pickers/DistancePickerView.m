@@ -94,10 +94,14 @@
         if (text) {
             
             // set up the frame for the label using our longestString length
-            NSString *keyName = [NSString stringWithFormat:@"%@_%@", [NSString stringWithString:@"longestString"], [NSNumber numberWithInt:component]]; 
+            NSString *keyName = [NSString stringWithFormat:@"%@_%@", @"longestString", [NSNumber numberWithInt:component]];
             NSString *longestString = [labels objectForKey:keyName];
             CGRect frame;
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_7_0
+            frame.size = [longestString sizeWithAttributes:@{NSFontAttributeName : labelfont}];
+#else
             frame.size = [longestString sizeWithFont:labelfont];
+#endif
             
             // center it vertically 
             frame.origin.y = (self.frame.size.height / 2) - (frame.size.height / 2) - 0.5;
